@@ -106,12 +106,12 @@ Toutes les routes sont préfixées par `/api/v1`.
 
 | Module | Route de base | Description |
 | --- | --- | --- |
-| **Clients** | `/clients` | Liste, création, mise à jour et suppression de clients. |
-| **Restaurants** | `/restaurants` | Gestion des établissements, filtrage par quartier ou nom. |
-| **Plats** | `/plat` | Gestion du menu, filtrage par catégorie, restaurant ou prix. |
-| **Commandes** | `/commandes` | Création et suivi des commandes. |
-| **Paiements** | `/paiements` | Enregistrement et suivi des transactions. |
-| **Avis** | `/aviss` | Gestion des notes et commentaires. |
+| **Clients** | `http://localhost:8080//api/v1/clients` | Liste, création, mise à jour et suppression de clients. |
+| **Restaurants** | `http://localhost:8080//api/v1/restaurants` | Gestion des établissements, filtrage par quartier ou nom. |
+| **Plats** | `http://localhost:8080//api/v1/plat` | Gestion du menu, filtrage par catégorie, restaurant ou prix. |
+| **Commandes** | `http://localhost:8080//api/v1/commandes` | Création et suivi des commandes. |
+| **Paiements** | `http://localhost:8080//api/v1/paiements` | Enregistrement et suivi des transactions. |
+| **Avis** | `http://localhost:8080//api/v1/aviss` | Gestion des notes et commentaires. |
 
 ### Exemple : Créer une Commande
 
