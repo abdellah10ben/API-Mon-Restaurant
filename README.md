@@ -305,6 +305,6 @@ chmod +x test_api.sh
 
 ### Diagramme Merise (Entité-Association)
 
-<img width="509" height="385" alt="Entite_Asso_Diag" src="https://github.com/user-attachments/assets/b2f6e244-82d7-4089-a525-ab7acd3b35df" />
+<img width="3040" height="2760" alt="image" src="https://github.com/user-attachments/assets/0a99a6a1-d4a9-4f2d-be62-ece2e7ecc231" />
 
 
