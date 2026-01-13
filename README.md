@@ -91,7 +91,7 @@ Voici comment les classes Java interagissent entre elles.
 
 ---
 
-### 📝 Résumé Visuel Rapide
+### 📝 Résumé :
 
 | Entité A | Relation | Entité B | Clé étrangère (FK) située dans... |
 | :--- | :---: | :--- | :--- |
@@ -145,14 +145,88 @@ Le projet utilise des volumes Docker pour assurer la persistance des données m�
 
 Toutes les routes sont préfixées par `/api/v1`.
 
-| Module | Route de base | Description |
-| --- | --- | --- |
-| **Clients** | `http://localhost:8080//api/v1/clients` | Liste, création, mise à jour et suppression de clients. |
-| **Restaurants** | `http://localhost:8080//api/v1/restaurants` | Gestion des établissements, filtrage par quartier ou nom. |
-| **Plats** | `http://localhost:8080//api/v1/plat` | Gestion du menu, filtrage par catégorie, restaurant ou prix. |
-| **Commandes** | `http://localhost:8080//api/v1/commandes` | Création et suivi des commandes. |
-| **Paiements** | `http://localhost:8080//api/v1/paiements` | Enregistrement et suivi des transactions. |
-| **Avis** | `http://localhost:8080//api/v1/aviss` | Gestion des notes et commentaires. |
+## 🔌 API Endpoints
+
+Voici la liste exhaustive de tous les endpoints (points d'entrée) de l'application. Je les ai regroupés par module pour une meilleure lisibilité. Tu peux utiliser ces URLs directement dans **Postman** ou via **cURL**.
+
+### 👤 1. Clients (`ClientController`)
+**Base URL :** `/api/v1/clients`
+
+| Méthode | URL | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/clients` | Récupérer tous les clients |
+| `GET` | `/api/v1/clients/{id}` | Récupérer un client par son ID |
+| `GET` | `/api/v1/clients/email/{email}` | Récupérer un client par son email |
+| `POST` | `/api/v1/clients` | Créer un nouveau client |
+| `PUT` | `/api/v1/clients/{id}` | Mettre à jour un client existant |
+| `DELETE` | `/api/v1/clients/{id}` | Supprimer un client |
+
+### mn 2. Restaurants (`RestaurantController`)
+**Base URL :** `/api/v1/restaurants`
+
+| Méthode | URL | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/restaurants` | Récupérer tous les restaurants |
+| `GET` | `/api/v1/restaurants/{id}` | Récupérer un restaurant par son ID |
+| `GET` | `/api/v1/restaurants/name/{name}` | Chercher des restaurants par nom |
+| `GET` | `/api/v1/restaurants/district/{district}` | Chercher un restaurant par quartier |
+| `POST` | `/api/v1/restaurants` | Créer un nouveau restaurant |
+| `PUT` | `/api/v1/restaurants/{id}` | Mettre à jour un restaurant |
+| `DELETE` | `/api/v1/restaurants/{id}` | Supprimer un restaurant |
+
+### 🍔 3. Plats (`PlatController`)
+⚠️ **Attention :** L'URL est au singulier (`plat`).
+**Base URL :** `/api/v1/plat`
+
+| Méthode | URL | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/plat` | Récupérer tous les plats |
+| `GET` | `/api/v1/plat/{id}` | Récupérer un plat par son ID |
+| `GET` | `/api/v1/plat/name/{name}` | Chercher des plats par nom |
+| `GET` | `/api/v1/plat/restaurant/{id}` | Récupérer les plats d'un restaurant |
+| `GET` | `/api/v1/plat/category/{category}` | Filtrer les plats par catégorie |
+| `GET` | `/api/v1/plat/type/vegetarian` | Récupérer uniquement les plats végétariens |
+| `GET` | `/api/v1/plat/price-range?min=x&max=y` | Filtrer par prix (ex: `?minPrice=10&maxPrice=20`) |
+| `POST` | `/api/v1/plat` | Ajouter un nouveau plat |
+| `PUT` | `/api/v1/plat/{id}` | Mettre à jour un plat |
+| `DELETE` | `/api/v1/plat/{id}` | Supprimer un plat |
+
+### 📦 4. Commandes (`CommandeController`)
+**Base URL :** `/api/v1/commandes`
+
+| Méthode | URL | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/commandes` | Récupérer toutes les commandes |
+| `GET` | `/api/v1/commandes/{id}` | Récupérer une commande par son ID |
+| `GET` | `/api/v1/commandes/client/{clientId}` | Voir les commandes d'un client |
+| `GET` | `/api/v1/commandes/restaurant/{id}` | Voir les commandes d'un restaurant |
+| `POST` | `/api/v1/commandes` | Passer une nouvelle commande |
+| `PUT` | `/api/v1/commandes/{id}` | Mettre à jour une commande (ex: statut) |
+
+### 💳 5. Paiements (`PaiementController`)
+**Base URL :** `/api/v1/paiements`
+
+| Méthode | URL | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/paiements` | Récupérer tous les paiements |
+| `GET` | `/api/v1/paiements/{id}` | Récupérer un paiement par son ID |
+| `POST` | `/api/v1/paiements` | Effectuer un paiement |
+| `PUT` | `/api/v1/paiements/{id}` | Mettre à jour un paiement (ex: statut) |
+
+### ⭐ 6. Avis (`AvisController`)
+⚠️ **Attention :** L'URL prend deux 's' (`aviss`).
+**Base URL :** `/api/v1/aviss`
+
+| Méthode | URL | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/v1/aviss` | Récupérer tous les avis |
+| `GET` | `/api/v1/aviss/{id}` | Récupérer un avis par son ID |
+| `GET` | `/api/v1/aviss/restaurant/{id}` | Voir les avis d'un restaurant |
+| `GET` | `/api/v1/aviss/user/{clientId}` | Voir les avis laissés par un client |
+| `GET` | `/api/v1/aviss/date/{date}` | Chercher des avis par date |
+| `POST` | `/api/v1/aviss` | Laisser un avis |
+| `PUT` | `/api/v1/aviss/{id}` | Modifier un avis |
+| `DELETE` | `/api/v1/aviss/{id}` | Supprimer un avis |
 
 ### Exemple : Créer une Commande
 
