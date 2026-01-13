@@ -154,6 +154,8 @@ Vous pouvez lancer l'application **sans toucher au code source**.
 
 Si vous avez déjà une base MySQL active, ou pour tester l'image de manière isolée, utilisez la commande suivante :
 
+
+```markdown
 ```bash
 docker run -p 8080:8080 \
   -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/mon_restaurant \
