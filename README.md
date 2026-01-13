@@ -149,24 +149,21 @@ Vous pouvez lancer l'application **sans toucher au code source**.
 👉 [bouyanzermed/mon-restaurant-api](https://hub.docker.com/r/bouyanzermed/mon-restaurant-api)
 
 
+### Lancement via Docker Hub (Image seule)
 
-### Commande de lancement (Image seule)
-
-Si vous avez déjà une base MySQL active, ou pour tester l'image de manière isolée, utilisez la commande suivante :
-
-
-```markdown
+Si vous avez déjà une base MySQL active :
 ```bash
 docker run -p 8080:8080 \
   -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/mon_restaurant \
   -e SPRING_DATASOURCE_USERNAME=bouyanzer \
   -e SPRING_DATASOURCE_PASSWORD=bouyanzer \
   bouyanzermed/mon-restaurant-api:latest
+```
 
 ---
 
+## 4. Persistance des Données
 
-💾 5. Persistance des Données
 Le projet utilise un volume Docker nommé mysql_data déclaré dans le docker-compose.yml.
 
 Rôle : Stocker les fichiers de la BDD de manière persistante sur la machine hôte.
