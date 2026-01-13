@@ -21,46 +21,87 @@ L'application utilise une **architecture modulaire et conteneurisée** (monolith
 
 ---
 
-## 3. Description des Entités 
+## 3. Description de la base de données
 
-L'API gère des relations complexes telles que le **Many-to-Many** (une Commande lie plusieurs Plats) et le **One-to-Many** (un Client passe plusieurs Commandes).
 
-### 1. Entité : CLIENT
+### 📊 1. Schéma de la Base de Données
 
-- **Attributs :** `id_client` (CP), `prenom_client`, `nom_client`, `email_client`, `adresse_client`, `telephone_client`.
+Voici comment les tables sont structurées et connectées dans MySQL (basé sur le fichier `seed_test_data.sql` et les entités JPA).
 
-- **Relations :** 1,N vers COMMANDE, 0,N vers AVIS.
+**Tables et Colonnes principales :**
 
-### 2. Entité : RESTAURANT
+* **`client`** : `id` (PK), `firstname`, `lastname`, `email`, `address`, `phone_number`
+* **`restaurant`** : `id` (PK), `name`, `description`, `address`, `district`, `phone_number`
+* **`plat`** : `id` (PK), `name`, `price`, `category`, `is_vegetarian`, `restaurant_id` (FK)
+* **`commandes`** : `id` (PK), `client_id` (FK), `address`, `status`, `total_amount`, `is_paid`
+* **`commande_plat`** (Table de liaison) : `commande_id` (FK), `plat_id` (FK)
+* **`paiement`** : `id` (PK), `commande_id` (FK/Unique), `paiement_method`, `paiement_status`
+* **`aviss`** : `id` (PK), `client_id` (FK), `restaurant_id` (FK), `commande_id` (FK/Unique), `rating`, `description`
 
-- **Attributs :** `id_restaurant` (CP), `nom_restaurant`, `description_restaurant`, `adresse_restaurant`, `quartier_restaurant`, `telephone_restaurant`.
+---
 
-- **Relations :** 1,N vers PLAT, 0,N vers AVIS.
+### 🔗 2. Détail des Relations 
 
-### 3. Entité : PLAT 
+Voici comment les classes Java interagissent entre elles.
 
-- **Attributs :** `id_plat` (CP), `id_restaurant` (CE), `nom_plat`, `description_plat`, `categorie_plat`, `prix_plat`, `est_vegetarien`.
+#### A. One-to-One (1:1) — "Un pour Un"
+*Une entité est liée à une seule autre entité.*
 
-- **Relations :** N,1 vers RESTAURANT, N,N avec COMMANDE (via LIGNE_COMMANDE).
+1.  **Commande ↔ Paiement**
+    * **Logique :** Une commande ne peut avoir qu'un seul paiement, et un paiement correspond à une seule commande.
+    * **Code :** Dans `Paiement.java`, tu as `@OneToOne` vers `Commande`.
+    * **SQL :** La table `paiement` a une colonne `commande_id` qui est unique.
 
-### 4. Entité : COMMANDE 
+2.  **Commande ↔ Avis**
+    * **Logique :** Un avis concerne une commande précise. On ne laisse pas plusieurs avis pour la même commande.
+    * **Code :** Dans `Avis.java`, tu as `@OneToOne` vers `Commande`.
+    * **SQL :** La table `aviss` a une colonne `commande_id` qui est unique.
 
-- **Attributs :** `id_commande` (CP), `id_client` (CE), `adresse_livraison`, `type_livraison`.
+#### B. Many-to-One (N:1) — "Plusieurs pour Un"
+*Plusieurs entités sont liées à une seule entité parente.*
 
-- **Relations :** N,1 vers CLIENT, N,N avec PLAT, 1,1 vers PAIEMENT, 0,1 vers AVIS.
+1.  **Plat → Restaurant**
+    * **Logique :** Un restaurant propose plusieurs plats, mais un plat spécifique appartient à un seul restaurant.
+    * **Code :** Dans `Plat.java`, tu as `@ManyToOne` vers `Restaurant`.
+    * **SQL :** La table `plat` contient la clé étrangère `restaurant_id`.
 
-### 5. Entité : PAIEMENT
+2.  **Commande → Client**
+    * **Logique :** Un client peut passer plusieurs commandes, mais une commande est passée par un seul client.
+    * **Code :** Dans `Commande.java`, tu as `@ManyToOne` vers `Client`.
+    * **SQL :** La table `commandes` contient la clé étrangère `client_id`.
 
-- **Attributs :** `id_commande` (CP & CE), `methode_paiement`.
+3.  **Avis → Client**
+    * **Logique :** Un client peut écrire plusieurs avis.
+    * **Code :** Dans `Avis.java`, tu as `@ManyToOne` vers `Client`.
 
-- **Relations :** 1,1 vers COMMANDE.
+4.  **Avis → Restaurant**
+    * **Logique :** Un restaurant peut recevoir plusieurs avis.
+    * **Code :** Dans `Avis.java`, tu as `@ManyToOne` vers `Restaurant`.
 
-### 6. Entité : AVIS 
+#### C. Many-to-Many (N:N) — "Plusieurs pour Plusieurs"
+*Des entités multiples des deux côtés sont liées entre elles. Cela nécessite une table intermédiaire.*
 
-- **Attributs :** `id_avis` (CP), `id_client` (CE), `id_restaurant` (CE), `id_commande` (CE), `titre_avis`, `note_avis`, `description_avis`.
+1.  **Commande ↔ Plat**
+    * **Logique :** Une commande contient plusieurs plats. Et le même plat (ex: "Pizza Margherita") peut se retrouver dans plusieurs commandes différentes.
+    * **Code :** Dans `Commande.java`, tu as `@ManyToMany` avec `@JoinTable`.
+    * **SQL :** C'est la table `commande_plat` qui gère cela. Elle contient juste deux colonnes : `commande_id` et `plat_id`.
+    * **Exemple :**
+        * Commande #1 contient Plat #1 et Plat #2.
+        * Commande #2 contient Plat #3 et Plat #4.
 
-- **Relations :** 1,1 vers COMMANDE.
+---
 
+### 📝 Résumé Visuel Rapide
+
+| Entité A | Relation | Entité B | Clé étrangère (FK) située dans... |
+| :--- | :---: | :--- | :--- |
+| **Paiement** | 1 — 1 | **Commande** | Table `paiement` (`commande_id`) |
+| **Avis** | 1 — 1 | **Commande** | Table `aviss` (`commande_id`) |
+| **Plat** | N — 1 | **Restaurant** | Table `plat` (`restaurant_id`) |
+| **Commande** | N — 1 | **Client** | Table `commandes` (`client_id`) |
+| **Avis** | N — 1 | **Client** | Table `aviss` (`client_id`) |
+| **Avis** | N — 1 | **Restaurant** | Table `aviss` (`restaurant_id`) |
+| **Commande** | N — N | **Plat** | Table de liaison `commande_plat` |
 ---
 
 ## 4. Déploiement Docker
