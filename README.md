@@ -301,7 +301,7 @@ chmod +x test_api.sh
 
 ### Diagramme de classe
 
-![Diagramme de classe](https://github.com/user-attachments/assets/41bb66bc-d61c-4587-960d-764922774c8a)
+<img width="2656" height="4152" alt="image" src="https://github.com/user-attachments/assets/357e9415-64aa-4679-a2cd-e5e5672b9081" />
 
 ### Diagramme Merise (Entité-Association)
 
