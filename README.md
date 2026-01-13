@@ -161,6 +161,9 @@ docker run -p 8080:8080 \
   -e SPRING_DATASOURCE_PASSWORD=bouyanzer \
   bouyanzermed/mon-restaurant-api:latest
 
+---
+
+
 💾 5. Persistance des Données
 Le projet utilise un volume Docker nommé mysql_data déclaré dans le docker-compose.yml.
 
